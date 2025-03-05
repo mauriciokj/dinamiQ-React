@@ -99,10 +99,10 @@ export default function PollViewer() {
           <div className="mx-auto w-fit p-3 bg-white rounded-lg shadow-md">
             <QRCode 
               value={`${baseUrl}/polls/${pollData.token}`}
-              size={100}
+              size={180}
               className="rounded"
             />
-            <p className="mt-2 text-sm text-gray-500">Compartilhe este QR Code</p>
+            <p className="mt-2 text-sm text-gray-500">QR Code para votação</p>
           </div>
         </div>
 
