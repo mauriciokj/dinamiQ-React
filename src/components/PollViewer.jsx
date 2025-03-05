@@ -10,8 +10,8 @@ export default function PollViewer() {
   const { token } = useParams()
   const [pollData, setPollData] = useState(null)
   // Variáveis de ambiente para API e WebSocket com fallback
-  const baseUrl = import.meta.env.DINAMIQ_API_URL || 'http://localhost:3000'
-  const wsUrl = import.meta.env.DINAMIQ_API_WS_URL || 'ws://localhost:3000/cable'
+  const baseUrl = import.meta.env.VITE_DINAMIQ_API_URL || 'http://localhost:3000'
+  const wsUrl = import.meta.env.VITE_DINAMIQ_API_WS_URL || 'ws://localhost:3000/cable'
 
   useEffect(() => {
     const fetchPoll = async () => {

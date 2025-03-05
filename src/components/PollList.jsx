@@ -5,7 +5,7 @@ import QRCode from 'react-qr-code'
 
 export default function PollList() {
   const [polls, setPolls] = useState([])
-  const baseUrl = import.meta.env.DINAMIQ_API_URL || 'http://localhost:3000'
+  const baseUrl = import.meta.env.VITE_DINAMIQ_API_URL || 'http://localhost:3000'
 
   useEffect(() => {
     const fetchPolls = async () => {

@@ -7,7 +7,7 @@ export default function PollCreator() {
   const [options, setOptions] = useState(['', ''])
   const navigate = useNavigate()
   // Variável de ambiente para URL da API
-  const baseUrl = import.meta.env.DINAMIQ_API_URL || 'http://localhost:3000'
+  const baseUrl = import.meta.env.VITE_DINAMIQ_API_URL || 'http://localhost:3000'
 
   const handleSubmit = async (e) => {
     e.preventDefault()
