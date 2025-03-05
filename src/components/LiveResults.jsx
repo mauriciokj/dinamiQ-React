@@ -30,15 +30,16 @@ export default function LiveResults({ options }) {
   useEffect(() => {
     if (chartRef.current && options?.length) {
       if (chartInstance.current) chartInstance.current.destroy()
+        const orderedOptions = [...options].sort((a, b) => a.id - b.id);
       
       chartInstance.current = new Chart(chartRef.current, {
         type: 'bar',
         data: {
-          labels: options.map(opt => opt.content),
+          labels: orderedOptions.map(opt => opt.content),
           datasets: [{
             label: 'Votos',
-            data: options.map(opt => opt.votes),
-            backgroundColor: options.map((_, index) => getColor(index)),
+            data: orderedOptions.map(opt => opt.votes_count),
+            backgroundColor: orderedOptions.map((_, index) => getColor(index)),
             borderWidth: 0,
             borderRadius: 4
           }]

@@ -44,7 +44,7 @@ export default function PollList() {
                   >
                     <span>{option.content}</span>
                     <span className="font-medium text-primary">
-                      {option.votes} votos
+                      {option.votes_count} votos
                     </span>
                   </div>
                 ))}
