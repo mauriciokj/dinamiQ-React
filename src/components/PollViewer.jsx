@@ -12,10 +12,13 @@ export default function PollViewer() {
   const [selectedOption, setSelectedOption] = useState(null)
   const userId = getOrCreateUserId()
 
-  // Verifica o voto atual do usuário
+  // Variáveis de ambiente com fallback para desenvolvimento
+  const baseUrl = import.meta.env.VITE_DINAMIQ_API_URL || 'http://localhost:3000'
+  const wsUrl = import.meta.env.VITE_DINAMIQ_API_WS_URL || 'ws://localhost:3000/cable'
+
   const checkVote = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:3000/polls/${token}/check_vote`, {
+      const { data } = await axios.get(`${baseUrl}/polls/${token}/check_vote`, {
         params: { user_uid: userId }
       })
       setSelectedOption(data.option_id)
@@ -24,11 +27,10 @@ export default function PollViewer() {
     }
   }
 
-  // Carrega os dados iniciais da enquete
   useEffect(() => {
     const loadPollData = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:3000/polls/${token}`)
+        const { data } = await axios.get(`${baseUrl}/polls/${token}`)
         setPollData({
           ...data,
           options: data.options.sort((a, b) => a.id - b.id)
@@ -40,22 +42,18 @@ export default function PollViewer() {
     }
 
     loadPollData()
-  }, [token])
+  }, [token, baseUrl])
 
-  // Configura a conexão WebSocket
   useEffect(() => {
-    const cable = createConsumer('ws://localhost:3000/cable')
-    
+    const cable = createConsumer(wsUrl)
     const subscription = cable.subscriptions.create(
       { channel: 'PollChannel', token },
       {
         received: async (newOptions) => {
-          // Atualiza os dados mantendo a ordem correta
           setPollData(prev => ({
             ...prev,
             options: newOptions.sort((a, b) => a.id - b.id)
           }))
-          // Verifica novamente o voto após atualização
           await checkVote()
         }
       }
@@ -65,21 +63,19 @@ export default function PollViewer() {
       subscription.unsubscribe()
       cable.disconnect()
     }
-  }, [token])
+  }, [token, wsUrl])
 
-  // Manipula o envio de votos
   const handleVote = async (optionId) => {
     try {
-      await axios.post(`http://localhost:3000/polls/${token}/vote`, {
+      await axios.post(`${baseUrl}/polls/${token}/vote`, {
         option_id: optionId,
         user_uid: userId
       })
-      // Atualização otimista do estado
-      setSelectedOption(optionId)
+      setSelectedOption(optionId) // Atualização otimista
     } catch (error) {
       console.error('Erro ao votar:', error)
-      // Recarrega os dados em caso de erro
-      const { data } = await axios.get(`http://localhost:3000/polls/${token}`)
+      // Recarrega dados em caso de erro
+      const { data } = await axios.get(`${baseUrl}/polls/${token}`)
       setPollData(data)
     }
   }
@@ -95,28 +91,25 @@ export default function PollViewer() {
   return (
     <div className="min-h-screen bg-gray-50 p-8 flex flex-col items-center justify-center">
       <div className="max-w-2xl w-full bg-white rounded-xl shadow-lg p-6">
-        {/* Cabeçalho */}
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">
             {pollData.title}
           </h1>
           
-          {/* QR Code */}
           <div className="mx-auto w-fit p-3 bg-white rounded-lg shadow-md">
             <QRCode 
-              value={`${window.location.origin}/polls/${pollData.token}`}
-              size={180}
+              value={`${baseUrl}/polls/${pollData.token}`}
+              size={100}
               className="rounded"
             />
+            <p className="mt-2 text-sm text-gray-500">Compartilhe este QR Code</p>
           </div>
         </div>
 
-        {/* Gráfico de Resultados */}
         <div className="mb-8">
           <LiveResults options={pollData.options} />
         </div>
 
-        {/* Opções de Voto */}
         <div className="space-y-4">
           {pollData.options.map(opt => (
             <button 
