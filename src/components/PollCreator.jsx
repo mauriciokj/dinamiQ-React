@@ -6,10 +6,12 @@ export default function PollCreator() {
   const [title, setTitle] = useState('')
   const [options, setOptions] = useState(['', ''])
   const navigate = useNavigate()
+  // Variável de ambiente para URL da API
+  const baseUrl = import.meta.env.DINAMIQ_API_URL || 'http://localhost:3000'
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const { data } = await axios.post('http://localhost:3000/polls', {
+    const { data } = await axios.post(`${baseUrl}/polls`, {
       poll: { title, options_attributes: options.filter(o => o).map(content => ({ content })) }
     }, {
       withCredentials: true

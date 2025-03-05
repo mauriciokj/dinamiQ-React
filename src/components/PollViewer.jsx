@@ -9,17 +9,20 @@ import axios from 'axios'
 export default function PollViewer() {
   const { token } = useParams()
   const [pollData, setPollData] = useState(null)
+  // Variáveis de ambiente para API e WebSocket com fallback
+  const baseUrl = import.meta.env.DINAMIQ_API_URL || 'http://localhost:3000'
+  const wsUrl = import.meta.env.DINAMIQ_API_WS_URL || 'ws://localhost:3000/cable'
 
   useEffect(() => {
     const fetchPoll = async () => {
-      console.log(token)
-      const { data } = await axios.get(`http://localhost:3000/polls/${token}`)
+      // Altera a URL para usar baseUrl
+      const { data } = await axios.get(`${baseUrl}/polls/${token}`)
       setPollData(data)
     }
     fetchPoll()
 
-    // Conexão do Action Cable sem armazenar no estado
-    const cable = createConsumer('ws://localhost:3000/cable')
+    // Conexão do Action Cable utilizando wsUrl
+    const cable = createConsumer(wsUrl)
     const subscription = cable.subscriptions.create(
       { channel: 'PollChannel', token },
       { received: (data) => setPollData(prev => ({ ...prev, options: data })) }
@@ -33,7 +36,8 @@ export default function PollViewer() {
   }, [token]) // Apenas token como dependência
 
   const handleVote = async (optionId) => {
-    await axios.post(`http://localhost:3000/polls/${token}/vote`, { option_id: optionId })
+    // Altera a URL para usar baseUrl
+    await axios.post(`${baseUrl}/polls/${token}/vote`, { option_id: optionId })
   }
 
   if (!pollData) return <div>Carregando...</div>
