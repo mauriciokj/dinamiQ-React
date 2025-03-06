@@ -1,32 +1,14 @@
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
-import PollCreator from './components/PollCreator'
-import PollViewer from './components/PollViewer'
-import PollList from './components/PollList'
-import NavigationMenu from './components/NavigationMenu'
+// App.jsx
+import { RouterProvider } from 'react-router-dom'
+import { VotingProvider } from './context/VotingContext'
+import router from './router'
+import { Toaster } from 'react-hot-toast'
 
-const Layout = () => (
-  <div>
-    <NavigationMenu />
-    <div className="pt-16"> {/* Espaço para o menu fixo */}
-      <Outlet />
-    </div>
-  </div>
-)
-
-const router = createBrowserRouter([
-  {
-    element: <Layout />,
-    children: [
-      { path: '/', element: <PollCreator /> },
-      { path: '/polls/:token', element: <PollViewer /> },
-      { path: '/polls-list', element: <PollList /> }
-    ]
-  }
-])
-
-
-function App() {
-  return <RouterProvider router={router} />
+export default function App() {
+  return (
+    <VotingProvider>
+      <RouterProvider router={router} />
+      <Toaster />
+    </VotingProvider>
+  )
 }
-
-export default App

@@ -29,10 +29,11 @@ export default function LiveResults({ options }) {
 
   useEffect(() => {
     if (chartRef.current && options?.length) {
+      const ctx = chartRef.current.getContext('2d')
       if (chartInstance.current) chartInstance.current.destroy()
         const orderedOptions = [...options].sort((a, b) => a.id - b.id);
       
-      chartInstance.current = new Chart(chartRef.current, {
+      chartInstance.current = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: orderedOptions.map(opt => opt.content),
