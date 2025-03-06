@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // components/Layout/UndoNotification.jsx
 import { useEffect } from 'react'
-import { useVoting } from '../../context/VotingContext'
 import toast from 'react-hot-toast'
+import { useVoting } from '../../hooks/useVoting'
 
 export const UndoNotification = () => {
   const { state, dispatch } = useVoting()

@@ -1,8 +1,10 @@
+/* eslint-disable react-refresh/only-export-components */
 // context/VotingContext.js
-import { createContext, useContext, useReducer } from 'react'
+
+import { createContext, useReducer } from 'react'
 import { votingReducer } from '../utils/votingReducer'
 
-const VotingContext = createContext()
+export const VotingContext = createContext()
 
 const initialState = {
   polls: [],
@@ -19,5 +21,3 @@ export const VotingProvider = ({ children }) => {
     </VotingContext.Provider>
   )
 }
-
-export const useVoting = () => useContext(VotingContext)

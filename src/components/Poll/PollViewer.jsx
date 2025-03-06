@@ -5,7 +5,7 @@ import QRCode from 'react-qr-code'
 import LiveResults from '../Layout/LiveResults'
 import axios from 'axios'
 import { getOrCreateUserId } from '../../utils/auth'
-import { useVoting } from '../../context/VotingContext'
+import { useVoting } from '../../hooks/useVoting'
 
 export default function PollViewer() {
   const { token } = useParams()
