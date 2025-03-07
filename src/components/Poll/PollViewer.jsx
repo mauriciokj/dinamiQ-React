@@ -67,6 +67,7 @@ export default function PollViewer() {
     }
   }, [token, wsUrl])
 
+
   const handleVote = async (optionId) => {
     try {
       await axios.post(`${baseUrl}/polls/${token}/vote`, {
@@ -81,7 +82,7 @@ export default function PollViewer() {
     } catch (error) {
       console.error('Erro ao votar:', error)
       // Recarrega dados em caso de erro
-      const { data } = await axios.get(`${baseUrl}/polls/${token}`)
+      const { data } = await axios.get(`${window.location.origin}/polls/${token}`)
       setPollData(data)
     }
   }
