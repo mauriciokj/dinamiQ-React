@@ -2,15 +2,17 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { createConsumer } from '@rails/actioncable'
 import QRCode from 'react-qr-code'
-import LiveResults from './LiveResults'
+import LiveResults from '../Layout/LiveResults'
 import axios from 'axios'
-import { getOrCreateUserId } from '../utils/auth'
+import { getOrCreateUserId } from '../../utils/auth'
+import { useVoting } from '../../hooks/useVoting'
 
 export default function PollViewer() {
   const { token } = useParams()
   const [pollData, setPollData] = useState(null)
   const [selectedOption, setSelectedOption] = useState(null)
   const userId = getOrCreateUserId()
+  const { dispatch } = useVoting();
 
   // Variáveis de ambiente com fallback para desenvolvimento
   const baseUrl = import.meta.env.VITE_DINAMIQ_API_URL || 'http://localhost:3000'
@@ -65,6 +67,7 @@ export default function PollViewer() {
     }
   }, [token, wsUrl])
 
+
   const handleVote = async (optionId) => {
     try {
       await axios.post(`${baseUrl}/polls/${token}/vote`, {
@@ -72,6 +75,10 @@ export default function PollViewer() {
         user_uid: userId
       })
       setSelectedOption(optionId) // Atualização otimista
+      dispatch({
+        type: 'ADD_VOTE',
+        payload: { pollId: token, optionId }
+      });
     } catch (error) {
       console.error('Erro ao votar:', error)
       // Recarrega dados em caso de erro
@@ -98,7 +105,7 @@ export default function PollViewer() {
           
           <div className="mx-auto w-fit p-3 bg-white rounded-lg shadow-md">
             <QRCode 
-              value={`${baseUrl}/polls/${pollData.token}`}
+              value={`${window.location.origin}/polls/${pollData.token}`}
               size={180}
               className="rounded"
             />
