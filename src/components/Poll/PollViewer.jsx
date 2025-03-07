@@ -82,7 +82,7 @@ export default function PollViewer() {
     } catch (error) {
       console.error('Erro ao votar:', error)
       // Recarrega dados em caso de erro
-      const { data } = await axios.get(`${window.location.origin}/polls/${token}`)
+      const { data } = await axios.get(`${baseUrl}/polls/${token}`)
       setPollData(data)
     }
   }
@@ -105,7 +105,7 @@ export default function PollViewer() {
           
           <div className="mx-auto w-fit p-3 bg-white rounded-lg shadow-md">
             <QRCode 
-              value={`${baseUrl}/polls/${pollData.token}`}
+              value={`${window.location.origin}/polls/${pollData.token}`}
               size={180}
               className="rounded"
             />
