@@ -5,7 +5,7 @@ import './index.css'
 
 // Remova o React.StrictMode para evitar dupla renderização em DEV
 ReactDOM.createRoot(document.getElementById('root')).render(
-  // <React.StrictMode>
+  <React.StrictMode>
     <App />
-  //  </React.StrictMode>
+  </React.StrictMode>
 )
